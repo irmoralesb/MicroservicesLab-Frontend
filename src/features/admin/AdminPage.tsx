@@ -27,7 +27,8 @@ export function AdminPage() {
     if (res.ok) {
       setUsers(data);
     } else {
-      setError(data.detail ?? "Failed to load users");
+      const error_detail = Array.isArray(data.detail) ? data.detail.map((d: any) => d.msg).join(', ') : data.detail;
+      setError(error_detail ?? "Failed to load users");
       setUsers([]);
     }
     setLoading(false);
@@ -49,7 +50,6 @@ export function AdminPage() {
   };
 
   const handleActivate = async (userId: string) => {
-    // TODO (you implement): PUT /api/v1/profile/{userId}/activate with Bearer token. Then loadUsers().
     const res = await fetchWithAuth(
       identityUrl(endpoints.profile.activate(userId)),
       { method: "PUT" },
@@ -78,7 +78,6 @@ export function AdminPage() {
   };
 
   const handleUnlock = async (userId: string) => {
-    // TODO (you implement): POST /api/v1/auth/unlock-account with body { user_id: userId }, Bearer token. Then loadUsers().
     const res = await fetchWithAuth(
       identityUrl(endpoints.auth.unlockAccount),
       { method: "POST" },
@@ -97,9 +96,19 @@ export function AdminPage() {
     setEditOpen(true);
   };
 
-  const handleDelete = (userId: string) => {
-    // TODO (you implement): When backend supports it, DELETE /api/v1/profile/{userId}. Then loadUsers().
-    loadUsers();
+  const handleDelete = async (userId: string) => {
+    const res = await fetchWithAuth(
+      identityUrl(endpoints.profile.delete(userId)),
+      { method: "DELETE" },
+      token,
+    );
+
+    if (res.ok) {
+      loadUsers();
+    } else {
+      const data = await res.json().catch(() => ({}));
+      setError(data.detail ?? "Failed to delete account");
+    }
   };
 
   return (
