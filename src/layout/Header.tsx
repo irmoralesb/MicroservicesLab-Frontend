@@ -30,12 +30,26 @@ export function Header() {
                 Home
               </Link>
               {isAdmin && (
-                <Link
-                  to="/admin"
-                  className="rounded px-2 py-1 text-slate-200 hover:bg-slate-700 hover:text-white"
-                >
-                  Admin
-                </Link>
+                <>
+                  <Link
+                    to="/admin"
+                    className="rounded px-2 py-1 text-slate-200 hover:bg-slate-700 hover:text-white"
+                  >
+                    Admin users
+                  </Link>
+                  <Link
+                    to="/admin/services"
+                    className="rounded px-2 py-1 text-slate-200 hover:bg-slate-700 hover:text-white"
+                  >
+                    Services
+                  </Link>
+                  <Link
+                    to="/admin/roles"
+                    className="rounded px-2 py-1 text-slate-200 hover:bg-slate-700 hover:text-white"
+                  >
+                    Roles
+                  </Link>
+                </>
               )}
               {/* Placeholder for future microservices */}
               <span className="rounded px-2 py-1 text-slate-500">More services…</span>
@@ -89,13 +103,29 @@ export function Header() {
                   Home
                 </Link>
                 {isAdmin && (
-                  <Link
-                    to="/admin"
-                    className="rounded px-3 py-2 text-slate-200 hover:bg-slate-700"
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    Admin
-                  </Link>
+                  <>
+                    <Link
+                      to="/admin"
+                      className="rounded px-3 py-2 text-slate-200 hover:bg-slate-700"
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      Admin users
+                    </Link>
+                    <Link
+                      to="/admin/services"
+                      className="rounded px-3 py-2 text-slate-200 hover:bg-slate-700"
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      Services
+                    </Link>
+                    <Link
+                      to="/admin/roles"
+                      className="rounded px-3 py-2 text-slate-200 hover:bg-slate-700"
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      Roles
+                    </Link>
+                  </>
                 )}
                 <span className="rounded px-3 py-2 text-slate-500">More services…</span>
                 <button

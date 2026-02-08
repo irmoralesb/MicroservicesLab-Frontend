@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "@/auth/context/AuthContext";
 import { UserList } from "@/features/admin/UserList";
 import { CreateUserModal } from "@/features/admin/CreateUserModal";
@@ -124,6 +125,31 @@ export function AdminPage() {
         >
           Create user
         </button>
+      </div>
+
+      <div className="mb-6 grid gap-4 sm:grid-cols-2">
+        <Link
+          to="/admin/services"
+          className="rounded border border-slate-200 bg-white p-4 text-sm text-slate-700 shadow hover:border-slate-300"
+        >
+          <div className="text-base font-semibold text-slate-800">
+            Service catalog
+          </div>
+          <div className="text-slate-500">
+            Add, edit, and remove registered microservices.
+          </div>
+        </Link>
+        <Link
+          to="/admin/roles"
+          className="rounded border border-slate-200 bg-white p-4 text-sm text-slate-700 shadow hover:border-slate-300"
+        >
+          <div className="text-base font-semibold text-slate-800">
+            Role catalog
+          </div>
+          <div className="text-slate-500">
+            Manage roles for each service.
+          </div>
+        </Link>
       </div>
 
       {error && (
