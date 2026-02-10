@@ -89,3 +89,8 @@ export interface RoleUpdateRequest {
   description: string
   service_id?: string | null
 }
+
+export interface RoleAssignRequest {
+  user_id: string
+  role_id: string
+}

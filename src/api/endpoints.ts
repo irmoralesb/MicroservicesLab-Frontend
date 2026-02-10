@@ -29,5 +29,8 @@ export const endpoints = {
     create: '/api/v1/roles',
     update: (roleId: string) => `/api/v1/roles/${roleId}`,
     delete: (roleId: string) => `/api/v1/roles/${roleId}`,
+    assign: '/api/v1/roles/assign',
+    unassign: '/api/v1/roles/unassign',
+    userRoles: (userId: string) => `/api/v1/roles/user/${userId}`,
   },
 } as const
