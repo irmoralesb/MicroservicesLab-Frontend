@@ -6,6 +6,7 @@ import { HomePage } from '@/features/home/HomePage'
 import { AdminPage } from '@/features/admin/AdminPage'
 import { ServiceCatalogPage } from '@/features/admin/ServiceCatalogPage'
 import { RoleCatalogPage } from '@/features/admin/RoleCatalogPage'
+import { RolePermissionsPage } from '@/features/admin/RolePermissionsPage'
 
 function App() {
   return (
@@ -41,6 +42,14 @@ function App() {
           element={
             <ProtectedRoute>
               <RoleCatalogPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/roles/:roleId/permissions"
+          element={
+            <ProtectedRoute>
+              <RolePermissionsPage />
             </ProtectedRoute>
           }
         />

@@ -94,3 +94,31 @@ export interface RoleAssignRequest {
   user_id: string
   role_id: string
 }
+
+export interface Permission {
+  id: string
+  service_id: string
+  name: string
+  resource: string
+  action: string
+  description: string
+}
+
+export interface PermissionForRole extends Permission {
+  is_assigned: boolean
+}
+
+export interface PermissionCreateRequest {
+  service_id: string
+  name: string
+  resource: string
+  action: string
+  description: string
+}
+
+export interface PermissionUpdateRequest {
+  name: string
+  resource: string
+  action: string
+  description: string
+}

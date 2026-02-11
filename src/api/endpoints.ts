@@ -33,4 +33,16 @@ export const endpoints = {
     unassign: '/api/v1/roles/unassign',
     userRoles: (userId: string) => `/api/v1/roles/user/${userId}`,
   },
+  permissions: {
+    list: (serviceId: string) => `/api/v1/permissions?service_id=${serviceId}`,
+    create: '/api/v1/permissions',
+    update: (permissionId: string) => `/api/v1/permissions/${permissionId}`,
+    delete: (permissionId: string) => `/api/v1/permissions/${permissionId}`,
+    forRole: (roleId: string, serviceId: string) =>
+      `/api/v1/roles/${roleId}/permissions?service_id=${serviceId}`,
+    assign: (roleId: string, permissionId: string) =>
+      `/api/v1/roles/${roleId}/permissions/${permissionId}`,
+    unassign: (roleId: string, permissionId: string) =>
+      `/api/v1/roles/${roleId}/permissions/${permissionId}`,
+  },
 } as const

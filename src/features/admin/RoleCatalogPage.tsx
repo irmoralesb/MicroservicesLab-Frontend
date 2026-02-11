@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/auth/context/AuthContext";
 import { fetchWithAuth, identityUrl } from "@/api/client";
 import { endpoints } from "@/api/endpoints";
@@ -8,6 +9,7 @@ import { EditRoleModal } from "@/features/admin/EditRoleModal";
 
 export function RoleCatalogPage() {
   const { token } = useAuth();
+  const navigate = useNavigate();
   const [services, setServices] = useState<ServiceResponse[]>([]);
   const [selectedServiceId, setSelectedServiceId] = useState<string | null>(
     null,
@@ -205,6 +207,18 @@ export function RoleCatalogPage() {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          navigate(
+                            `/admin/roles/${role.id}/permissions?serviceId=${selectedServiceId}`,
+                          )
+                        }
+                        disabled={!role.id || !selectedServiceId}
+                        className="rounded bg-green-600 px-2 py-1 text-xs text-white hover:bg-green-700 disabled:opacity-50"
+                      >
+                        Manage Permissions
+                      </button>
                       <button
                         type="button"
                         onClick={() => handleEdit(role)}
