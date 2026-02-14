@@ -45,3 +45,80 @@ export interface TokenResponse {
 export interface UnlockAccountRequest {
   user_id: string
 }
+
+export interface ServiceResponse {
+  id: string | null
+  name: string
+  description: string | null
+  is_active: boolean
+  url: string | null
+  port: number | null
+}
+
+export interface ServiceCreateRequest {
+  name: string
+  description: string | null
+  is_active: boolean
+  url: string | null
+  port: number | null
+}
+
+export interface ServiceUpdateRequest {
+  name: string
+  description: string | null
+  is_active: boolean
+  url: string | null
+  port: number | null
+}
+
+export interface RoleResponse {
+  id: string | null
+  name: string
+  description: string
+  service_id: string | null
+}
+
+export interface RoleCreateRequest {
+  name: string
+  description: string
+  service_id: string
+}
+
+export interface RoleUpdateRequest {
+  name: string
+  description: string
+  service_id?: string | null
+}
+
+export interface RoleAssignRequest {
+  user_id: string
+  role_id: string
+}
+
+export interface Permission {
+  id: string
+  service_id: string
+  name: string
+  resource: string
+  action: string
+  description: string
+}
+
+export interface PermissionForRole extends Permission {
+  is_assigned: boolean
+}
+
+export interface PermissionCreateRequest {
+  service_id: string
+  name: string
+  resource: string
+  action: string
+  description: string
+}
+
+export interface PermissionUpdateRequest {
+  name: string
+  resource: string
+  action: string
+  description: string
+}
