@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/auth/context/AuthContext";
 import { fetchWithAuth, identityUrl } from "@/api/client";
 import { endpoints } from "@/api/endpoints";
@@ -8,6 +9,7 @@ import { EditServiceModal } from "@/features/admin/EditServiceModal";
 
 export function ServiceCatalogPage() {
   const { token } = useAuth();
+  const navigate = useNavigate();
   const [services, setServices] = useState<ServiceResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -78,10 +80,10 @@ export function ServiceCatalogPage() {
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-slate-800">
-            Service catalog
+            Sites catalog
           </h1>
           <p className="text-sm text-slate-500">
-            Manage registered microservices for role assignments.
+            Manage registered sites. Configure roles for each site.
           </p>
         </div>
         <button
@@ -89,7 +91,7 @@ export function ServiceCatalogPage() {
           onClick={() => setCreateOpen(true)}
           className="rounded bg-slate-800 px-4 py-2 text-white hover:bg-slate-700"
         >
-          Add service
+          Add site
         </button>
       </div>
 
@@ -143,6 +145,14 @@ export function ServiceCatalogPage() {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        onClick={() => service.id && navigate(`/admin/sites/${service.id}/roles`)}
+                        disabled={!service.id}
+                        className="rounded bg-purple-600 px-2 py-1 text-xs text-white hover:bg-purple-700 disabled:opacity-50"
+                      >
+                        Roles
+                      </button>
                       <button
                         type="button"
                         onClick={() => handleEdit(service)}

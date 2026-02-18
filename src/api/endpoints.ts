@@ -45,4 +45,9 @@ export const endpoints = {
     unassign: (roleId: string, permissionId: string) =>
       `/api/v1/roles/${roleId}/permissions/${permissionId}`,
   },
+  userServices: {
+    getForUser: (userId: string) => `/api/v1/users/services/${userId}`,
+    assign: '/api/v1/users/services/assign',
+    unassign: (userId: string, serviceId: string) => `/api/v1/users/services/${userId}/${serviceId}`,
+  },
 } as const

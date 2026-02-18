@@ -122,3 +122,15 @@ export interface PermissionUpdateRequest {
   action: string
   description: string
 }
+
+export interface UserServiceAssignRequest {
+  user_id: string
+  service_id: string
+}
+
+export interface UserServiceResponse {
+  id: string | null
+  user_id: string
+  service_id: string
+  assigned_at: string | null
+}

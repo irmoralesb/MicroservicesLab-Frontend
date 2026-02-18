@@ -3,10 +3,11 @@ import { MainLayout } from '@/layout/MainLayout'
 import { ProtectedRoute } from '@/auth/ProtectedRoute'
 import { LoginPage } from '@/features/login/LoginPage'
 import { HomePage } from '@/features/home/HomePage'
-import { AdminPage } from '@/features/admin/AdminPage'
 import { ServiceCatalogPage } from '@/features/admin/ServiceCatalogPage'
 import { RoleCatalogPage } from '@/features/admin/RoleCatalogPage'
 import { RolePermissionsPage } from '@/features/admin/RolePermissionsPage'
+import { UsersPage } from '@/features/admin/UsersPage'
+import { UserServicesPage } from '@/features/admin/UserServicesPage'
 
 function App() {
   return (
@@ -21,16 +22,9 @@ function App() {
             </ProtectedRoute>
           }
         />
+        {/* Administration — Sites */}
         <Route
-          path="/admin"
-          element={
-            <ProtectedRoute>
-              <AdminPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/services"
+          path="/admin/sites"
           element={
             <ProtectedRoute>
               <ServiceCatalogPage />
@@ -38,7 +32,7 @@ function App() {
           }
         />
         <Route
-          path="/admin/roles"
+          path="/admin/sites/:serviceId/roles"
           element={
             <ProtectedRoute>
               <RoleCatalogPage />
@@ -46,10 +40,27 @@ function App() {
           }
         />
         <Route
-          path="/admin/roles/:roleId/permissions"
+          path="/admin/sites/:serviceId/roles/:roleId/permissions"
           element={
             <ProtectedRoute>
               <RolePermissionsPage />
+            </ProtectedRoute>
+          }
+        />
+        {/* Administration — Users */}
+        <Route
+          path="/admin/users"
+          element={
+            <ProtectedRoute>
+              <UsersPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/users/:userId/services"
+          element={
+            <ProtectedRoute>
+              <UserServicesPage />
             </ProtectedRoute>
           }
         />

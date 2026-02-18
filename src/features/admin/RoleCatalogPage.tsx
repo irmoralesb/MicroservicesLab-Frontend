@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "@/auth/context/AuthContext";
 import { fetchWithAuth, identityUrl } from "@/api/client";
 import { endpoints } from "@/api/endpoints";
@@ -10,89 +10,68 @@ import { EditRoleModal } from "@/features/admin/EditRoleModal";
 export function RoleCatalogPage() {
   const { token } = useAuth();
   const navigate = useNavigate();
-  const [services, setServices] = useState<ServiceResponse[]>([]);
-  const [selectedServiceId, setSelectedServiceId] = useState<string | null>(
-    null,
-  );
+  const { serviceId } = useParams<{ serviceId: string }>();
+  const [service, setService] = useState<ServiceResponse | null>(null);
   const [roles, setRoles] = useState<RoleResponse[]>([]);
-  const [loadingServices, setLoadingServices] = useState(true);
+  const [loadingService, setLoadingService] = useState(true);
   const [loadingRoles, setLoadingRoles] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
   const [editRole, setEditRole] = useState<RoleResponse | null>(null);
   const [editOpen, setEditOpen] = useState(false);
 
-  const selectedService = useMemo(
-    () => services.find((service) => service.id === selectedServiceId) ?? null,
-    [services, selectedServiceId],
-  );
-
-  const loadServices = useCallback(async () => {
-    setLoadingServices(true);
+  const loadService = useCallback(async () => {
+    if (!serviceId) return;
+    setLoadingService(true);
     setError(null);
     const res = await fetchWithAuth(
-      identityUrl(endpoints.services.all),
+      identityUrl(endpoints.services.selected(serviceId)),
+      { method: "GET" },
+      token,
+    );
+    const data = await res.json().catch(() => null);
+    if (res.ok) {
+      setService(data);
+    } else {
+      setError(data?.detail ?? "Failed to load service");
+    }
+    setLoadingService(false);
+  }, [serviceId, token]);
+
+  const loadRoles = useCallback(async () => {
+    if (!serviceId) return;
+    setLoadingRoles(true);
+    setError(null);
+    const res = await fetchWithAuth(
+      identityUrl(endpoints.roles.list(serviceId)),
       { method: "GET" },
       token,
     );
     const data = await res.json().catch(() => []);
     if (res.ok) {
-      const nextServices = Array.isArray(data) ? data : [];
-      setServices(nextServices);
-      if (!selectedServiceId && nextServices.length > 0) {
-        setSelectedServiceId(nextServices[0]?.id ?? null);
-      }
+      setRoles(Array.isArray(data) ? data : []);
     } else {
-      setError(data.detail ?? "Failed to load services");
-      setServices([]);
-    }
-    setLoadingServices(false);
-  }, [selectedServiceId, token]);
-
-  const loadRoles = useCallback(
-    async (serviceId: string) => {
-      setLoadingRoles(true);
-      setError(null);
-      const res = await fetchWithAuth(
-        identityUrl(endpoints.roles.list(serviceId)),
-        { method: "GET" },
-        token,
-      );
-      const data = await res.json().catch(() => []);
-      if (res.ok) {
-        setRoles(Array.isArray(data) ? data : []);
-      } else {
-        setError(data.detail ?? "Failed to load roles");
-        setRoles([]);
-      }
-      setLoadingRoles(false);
-    },
-    [token],
-  );
-
-  useEffect(() => {
-    loadServices();
-  }, [loadServices]);
-
-  useEffect(() => {
-    if (selectedServiceId) {
-      loadRoles(selectedServiceId);
-    } else {
+      setError(data.detail ?? "Failed to load roles");
       setRoles([]);
     }
-  }, [selectedServiceId, loadRoles]);
+    setLoadingRoles(false);
+  }, [serviceId, token]);
+
+  useEffect(() => {
+    loadService();
+  }, [loadService]);
+
+  useEffect(() => {
+    loadRoles();
+  }, [loadRoles]);
 
   const handleCreateSuccess = () => {
-    if (selectedServiceId) {
-      loadRoles(selectedServiceId);
-    }
+    loadRoles();
     setCreateOpen(false);
   };
 
   const handleEditSuccess = () => {
-    if (selectedServiceId) {
-      loadRoles(selectedServiceId);
-    }
+    loadRoles();
     setEditOpen(false);
     setEditRole(null);
   };
@@ -115,9 +94,7 @@ export function RoleCatalogPage() {
     );
 
     if (res.ok) {
-      if (selectedServiceId) {
-        loadRoles(selectedServiceId);
-      }
+      loadRoles();
     } else {
       const data = await res.json().catch(() => ({}));
       setError(data.detail ?? "Failed to delete role");
@@ -126,18 +103,30 @@ export function RoleCatalogPage() {
 
   return (
     <div className="mx-auto max-w-6xl">
+      <div className="mb-4">
+        <button
+          type="button"
+          onClick={() => navigate("/admin/sites")}
+          className="flex items-center gap-1 text-sm text-slate-500 hover:text-slate-800"
+        >
+          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          Back to Sites
+        </button>
+      </div>
+
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-slate-800">Role catalog</h1>
-          <p className="text-sm text-slate-500">
-            Assign roles per service to manage access.
-          </p>
+          <h1 className="text-2xl font-semibold text-slate-800">
+            {loadingService ? "Loading…" : `Roles — ${service?.name ?? "Unknown site"}`}
+          </h1>
+          <p className="text-sm text-slate-500">Manage roles for this site.</p>
         </div>
         <button
           type="button"
           onClick={() => setCreateOpen(true)}
-          disabled={!selectedServiceId}
-          className="rounded bg-slate-800 px-4 py-2 text-white hover:bg-slate-700 disabled:opacity-50"
+          className="rounded bg-slate-800 px-4 py-2 text-white hover:bg-slate-700"
         >
           Add role
         </button>
@@ -152,39 +141,13 @@ export function RoleCatalogPage() {
         </div>
       )}
 
-      <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center">
-        <label className="text-sm font-medium text-slate-700">
-          Service
-        </label>
-        <select
-          value={selectedServiceId ?? ""}
-          onChange={(e) => setSelectedServiceId(e.target.value || null)}
-          className="w-full max-w-sm rounded border border-slate-300 px-3 py-2 text-slate-900"
-        >
-          <option value="">Select a service</option>
-          {services.map((service) => (
-            <option key={service.id ?? service.name} value={service.id ?? ""}>
-              {service.name}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {loadingServices ? (
+      {loadingRoles ? (
         <div className="rounded border border-slate-200 bg-white p-8 text-center text-slate-500">
-          Loading services...
-        </div>
-      ) : !selectedServiceId ? (
-        <div className="rounded border border-slate-200 bg-white p-8 text-center text-slate-500">
-          Select a service to view its roles.
-        </div>
-      ) : loadingRoles ? (
-        <div className="rounded border border-slate-200 bg-white p-8 text-center text-slate-500">
-          Loading roles...
+          Loading roles…
         </div>
       ) : roles.length === 0 ? (
         <div className="rounded border border-slate-200 bg-white p-8 text-center text-slate-500">
-          No roles found for {selectedService?.name ?? "this service"}.
+          No roles found for this site.
         </div>
       ) : (
         <div className="overflow-x-auto rounded border border-slate-200 bg-white shadow">
@@ -192,9 +155,7 @@ export function RoleCatalogPage() {
             <thead className="bg-slate-50">
               <tr>
                 <th className="px-4 py-3 font-medium text-slate-700">Name</th>
-                <th className="px-4 py-3 font-medium text-slate-700">
-                  Description
-                </th>
+                <th className="px-4 py-3 font-medium text-slate-700">Description</th>
                 <th className="px-4 py-3 font-medium text-slate-700">Actions</th>
               </tr>
             </thead>
@@ -202,22 +163,20 @@ export function RoleCatalogPage() {
               {roles.map((role) => (
                 <tr key={role.id ?? role.name} className="hover:bg-slate-50">
                   <td className="px-4 py-3 text-slate-900">{role.name}</td>
-                  <td className="px-4 py-3 text-slate-700">
-                    {role.description}
-                  </td>
+                  <td className="px-4 py-3 text-slate-700">{role.description}</td>
                   <td className="px-4 py-3">
                     <div className="flex flex-wrap gap-2">
                       <button
                         type="button"
                         onClick={() =>
                           navigate(
-                            `/admin/roles/${role.id}/permissions?serviceId=${selectedServiceId}`,
+                            `/admin/sites/${serviceId}/roles/${role.id}/permissions`,
                           )
                         }
-                        disabled={!role.id || !selectedServiceId}
+                        disabled={!role.id}
                         className="rounded bg-green-600 px-2 py-1 text-xs text-white hover:bg-green-700 disabled:opacity-50"
                       >
-                        Manage Permissions
+                        Edit Permissions
                       </button>
                       <button
                         type="button"
@@ -245,15 +204,15 @@ export function RoleCatalogPage() {
 
       <CreateRoleModal
         open={createOpen}
-        serviceId={selectedServiceId}
-        serviceName={selectedService?.name ?? null}
+        serviceId={serviceId ?? null}
+        serviceName={service?.name ?? null}
         onClose={() => setCreateOpen(false)}
         onSuccess={handleCreateSuccess}
       />
       <EditRoleModal
         open={editOpen}
         role={editRole}
-        serviceName={selectedService?.name ?? null}
+        serviceName={service?.name ?? null}
         onClose={() => {
           setEditOpen(false);
           setEditRole(null);

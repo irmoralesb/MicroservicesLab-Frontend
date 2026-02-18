@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "@/auth/context/AuthContext";
 import { fetchWithAuth, identityUrl } from "@/api/client";
 import { endpoints } from "@/api/endpoints";
@@ -13,9 +13,7 @@ import { EditPermissionModal } from "@/features/admin/EditPermissionModal";
 export function RolePermissionsPage() {
   const { token } = useAuth();
   const navigate = useNavigate();
-  const { roleId } = useParams<{ roleId: string }>();
-  const [searchParams] = useSearchParams();
-  const serviceId = searchParams.get("serviceId");
+  const { serviceId, roleId } = useParams<{ serviceId: string; roleId: string }>();
 
   const [role, setRole] = useState<RoleResponse | null>(null);
   const [permissions, setPermissions] = useState<PermissionForRole[]>([]);
@@ -156,10 +154,13 @@ export function RolePermissionsPage() {
         <div>
           <button
             type="button"
-            onClick={() => navigate("/admin/roles")}
-            className="mb-2 text-sm text-slate-600 hover:text-slate-800"
+            onClick={() => navigate(`/admin/sites/${serviceId}/roles`)}
+            className="mb-2 flex items-center gap-1 text-sm text-slate-500 hover:text-slate-800"
           >
-            ← Back to Role Catalog
+            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            Back to Roles
           </button>
           <h1 className="text-2xl font-semibold text-slate-800">
             Manage Permissions: {role?.name ?? "Loading..."}

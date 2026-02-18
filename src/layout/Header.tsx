@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/auth/context/AuthContext'
 
@@ -6,6 +6,8 @@ export function Header() {
   const { token, isAdmin, logout } = useAuth()
   const navigate = useNavigate()
   const [menuOpen, setMenuOpen] = useState(false)
+  const [adminOpen, setAdminOpen] = useState(false)
+  const adminRef = useRef<HTMLDivElement>(null)
 
   const handleLogout = () => {
     logout()
@@ -30,26 +32,39 @@ export function Header() {
                 Home
               </Link>
               {isAdmin && (
-                <>
-                  <Link
-                    to="/admin"
-                    className="rounded px-2 py-1 text-slate-200 hover:bg-slate-700 hover:text-white"
+                <div className="relative" ref={adminRef}>
+                  <button
+                    type="button"
+                    onClick={() => setAdminOpen((o) => !o)}
+                    className="flex items-center gap-1 rounded px-2 py-1 text-slate-200 hover:bg-slate-700 hover:text-white"
                   >
-                    Admin users
-                  </Link>
-                  <Link
-                    to="/admin/services"
-                    className="rounded px-2 py-1 text-slate-200 hover:bg-slate-700 hover:text-white"
-                  >
-                    Services
-                  </Link>
-                  <Link
-                    to="/admin/roles"
-                    className="rounded px-2 py-1 text-slate-200 hover:bg-slate-700 hover:text-white"
-                  >
-                    Roles
-                  </Link>
-                </>
+                    Administration
+                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                  {adminOpen && (
+                    <div
+                      className="absolute right-0 top-full z-50 mt-1 min-w-[160px] rounded border border-slate-600 bg-slate-800 shadow-lg"
+                      onMouseLeave={() => setAdminOpen(false)}
+                    >
+                      <Link
+                        to="/admin/sites"
+                        className="block px-4 py-2 text-sm text-slate-200 hover:bg-slate-700"
+                        onClick={() => setAdminOpen(false)}
+                      >
+                        Sites
+                      </Link>
+                      <Link
+                        to="/admin/users"
+                        className="block px-4 py-2 text-sm text-slate-200 hover:bg-slate-700"
+                        onClick={() => setAdminOpen(false)}
+                      >
+                        Users
+                      </Link>
+                    </div>
+                  )}
+                </div>
               )}
               {/* Placeholder for future microservices */}
               <span className="rounded px-2 py-1 text-slate-500">More services…</span>
@@ -104,26 +119,22 @@ export function Header() {
                 </Link>
                 {isAdmin && (
                   <>
+                    <div className="px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-400">
+                      Administration
+                    </div>
                     <Link
-                      to="/admin"
-                      className="rounded px-3 py-2 text-slate-200 hover:bg-slate-700"
+                      to="/admin/sites"
+                      className="rounded px-3 py-2 pl-6 text-slate-200 hover:bg-slate-700"
                       onClick={() => setMenuOpen(false)}
                     >
-                      Admin users
+                      Sites
                     </Link>
                     <Link
-                      to="/admin/services"
-                      className="rounded px-3 py-2 text-slate-200 hover:bg-slate-700"
+                      to="/admin/users"
+                      className="rounded px-3 py-2 pl-6 text-slate-200 hover:bg-slate-700"
                       onClick={() => setMenuOpen(false)}
                     >
-                      Services
-                    </Link>
-                    <Link
-                      to="/admin/roles"
-                      className="rounded px-3 py-2 text-slate-200 hover:bg-slate-700"
-                      onClick={() => setMenuOpen(false)}
-                    >
-                      Roles
+                      Users
                     </Link>
                   </>
                 )}
