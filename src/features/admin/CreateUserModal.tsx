@@ -1,4 +1,4 @@
-import { use, useState } from "react";
+import { useState } from "react";
 import type { CreateUserRequest } from "@/shared/types";
 import { fetchWithAuth, identityUrl } from "@/api/client";
 import { endpoints } from "@/api/endpoints";

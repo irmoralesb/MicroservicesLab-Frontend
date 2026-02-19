@@ -34,7 +34,7 @@ export function EditUserModal({
   });
   const [roles, setRoles] = useState<RoleOption[]>([]);
   const [selectedRoleIds, setSelectedRoleIds] = useState<string[]>([]);
-  const [initialRoleIds, setInitialRoleIds] = useState<string[]>([]);
+  const [_initialRoleIds, setInitialRoleIds] = useState<string[]>([]);
   const [rolesLoading, setRolesLoading] = useState(false);
   const [roleUpdatingIds, setRoleUpdatingIds] = useState<Set<string>>(
     () => new Set(),
