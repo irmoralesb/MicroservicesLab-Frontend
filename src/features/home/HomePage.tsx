@@ -25,13 +25,22 @@ export function HomePage() {
         { method: 'GET' },
         token
       )
-      const data = await res.json().catch(() => [])
-      if (res.ok) {
-        setServices(Array.isArray(data) ? data : [])
-      } else {
+      
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
         setError(data.detail ?? 'Failed to load services')
         setServices([])
+        return
       }
+
+      const data = await res.json().catch(() => null)
+      if (data === null) {
+        setError('Invalid response from server')
+        setServices([])
+        return
+      }
+
+      setServices(Array.isArray(data) ? data : [])
     } catch {
       setError('Failed to load services')
       setServices([])
@@ -77,9 +86,9 @@ export function HomePage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {services.map((service) => (
+            {services.map((service, index) => (
               <button
-                key={service.id ?? service.name}
+                key={service.id ?? `service-${index}`}
                 type="button"
                 onClick={() => handleServiceClick(service)}
                 disabled={!service.url || !service.is_active}
