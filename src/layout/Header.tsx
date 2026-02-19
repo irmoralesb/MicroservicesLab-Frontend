@@ -7,7 +7,9 @@ export function Header() {
   const navigate = useNavigate()
   const [menuOpen, setMenuOpen] = useState(false)
   const [adminOpen, setAdminOpen] = useState(false)
+  const [profileOpen, setProfileOpen] = useState(false)
   const adminRef = useRef<HTMLDivElement>(null)
+  const profileRef = useRef<HTMLDivElement>(null)
 
   const handleLogout = () => {
     logout()
@@ -66,6 +68,39 @@ export function Header() {
                   )}
                 </div>
               )}
+              <div className="relative" ref={profileRef}>
+                <button
+                  type="button"
+                  onClick={() => setProfileOpen((o) => !o)}
+                  className="flex items-center gap-1 rounded px-2 py-1 text-slate-200 hover:bg-slate-700 hover:text-white"
+                >
+                  Profile
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                {profileOpen && (
+                  <div
+                    className="absolute right-0 top-full z-50 mt-1 min-w-[160px] rounded border border-slate-600 bg-slate-800 shadow-lg"
+                    onMouseLeave={() => setProfileOpen(false)}
+                  >
+                    <Link
+                      to="/profile/update"
+                      className="block px-4 py-2 text-sm text-slate-200 hover:bg-slate-700"
+                      onClick={() => setProfileOpen(false)}
+                    >
+                      Update Profile
+                    </Link>
+                    <Link
+                      to="/profile/change-password"
+                      className="block px-4 py-2 text-sm text-slate-200 hover:bg-slate-700"
+                      onClick={() => setProfileOpen(false)}
+                    >
+                      Change Password
+                    </Link>
+                  </div>
+                )}
+              </div>
               {/* Placeholder for future microservices */}
               <span className="rounded px-2 py-1 text-slate-500">More services…</span>
               <button
@@ -138,6 +173,23 @@ export function Header() {
                     </Link>
                   </>
                 )}
+                <div className="px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-400">
+                  Profile
+                </div>
+                <Link
+                  to="/profile/update"
+                  className="rounded px-3 py-2 pl-6 text-slate-200 hover:bg-slate-700"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Update Profile
+                </Link>
+                <Link
+                  to="/profile/change-password"
+                  className="rounded px-3 py-2 pl-6 text-slate-200 hover:bg-slate-700"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Change Password
+                </Link>
                 <span className="rounded px-3 py-2 text-slate-500">More services…</span>
                 <button
                   type="button"

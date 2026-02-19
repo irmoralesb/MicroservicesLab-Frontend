@@ -134,3 +134,8 @@ export interface UserServiceResponse {
   service_id: string
   assigned_at: string | null
 }
+
+export interface ChangePasswordRequest {
+  current_password: string
+  new_password: string
+}

@@ -8,6 +8,8 @@ import { RoleCatalogPage } from '@/features/admin/RoleCatalogPage'
 import { RolePermissionsPage } from '@/features/admin/RolePermissionsPage'
 import { UsersPage } from '@/features/admin/UsersPage'
 import { UserServicesPage } from '@/features/admin/UserServicesPage'
+import { UpdateProfilePage } from '@/features/profile/UpdateProfilePage'
+import { ChangePasswordPage } from '@/features/profile/ChangePasswordPage'
 
 function App() {
   return (
@@ -61,6 +63,23 @@ function App() {
           element={
             <ProtectedRoute>
               <UserServicesPage />
+            </ProtectedRoute>
+          }
+        />
+        {/* Profile */}
+        <Route
+          path="/profile/update"
+          element={
+            <ProtectedRoute>
+              <UpdateProfilePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile/change-password"
+          element={
+            <ProtectedRoute>
+              <ChangePasswordPage />
             </ProtectedRoute>
           }
         />
