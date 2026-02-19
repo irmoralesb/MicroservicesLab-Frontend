@@ -5,6 +5,9 @@ import { fetchWithAuth, identityUrl } from '@/api/client'
 import { endpoints } from '@/api/endpoints'
 import type { UpdateProfileRequest, UserProfileResponse } from '@/shared/types'
 
+const MAX_NAME_LENGTH = 50
+const MAX_EMAIL_LENGTH = 100
+
 export function UpdateProfilePage() {
   const { token, user } = useAuth()
   const navigate = useNavigate()
@@ -104,7 +107,7 @@ export function UpdateProfilePage() {
             <input
               type="text"
               required
-              maxLength={50}
+              maxLength={MAX_NAME_LENGTH}
               value={form.first_name}
               onChange={(e) =>
                 setForm((f) => ({ ...f, first_name: e.target.value }))
@@ -119,7 +122,7 @@ export function UpdateProfilePage() {
             </label>
             <input
               type="text"
-              maxLength={50}
+              maxLength={MAX_NAME_LENGTH}
               value={form.middle_name ?? ''}
               onChange={(e) =>
                 setForm((f) => ({ ...f, middle_name: e.target.value || null }))
@@ -135,7 +138,7 @@ export function UpdateProfilePage() {
             <input
               type="text"
               required
-              maxLength={50}
+              maxLength={MAX_NAME_LENGTH}
               value={form.last_name}
               onChange={(e) =>
                 setForm((f) => ({ ...f, last_name: e.target.value }))
@@ -151,7 +154,7 @@ export function UpdateProfilePage() {
             <input
               type="email"
               required
-              maxLength={100}
+              maxLength={MAX_EMAIL_LENGTH}
               value={form.email}
               onChange={(e) =>
                 setForm((f) => ({ ...f, email: e.target.value }))

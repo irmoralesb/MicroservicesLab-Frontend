@@ -5,6 +5,9 @@ import { fetchWithAuth, identityUrl } from '@/api/client'
 import { endpoints } from '@/api/endpoints'
 import type { ChangePasswordRequest } from '@/shared/types'
 
+const MIN_PASSWORD_LENGTH = 8
+const MAX_PASSWORD_LENGTH = 100
+
 export function ChangePasswordPage() {
   const { token } = useAuth()
   const navigate = useNavigate()
@@ -27,8 +30,8 @@ export function ChangePasswordPage() {
       return
     }
 
-    if (form.new_password.length < 8) {
-      setError('New password must be at least 8 characters long')
+    if (form.new_password.length < MIN_PASSWORD_LENGTH) {
+      setError(`New password must be at least ${MIN_PASSWORD_LENGTH} characters long`)
       return
     }
 
@@ -77,7 +80,7 @@ export function ChangePasswordPage() {
             <input
               type="password"
               required
-              maxLength={100}
+              maxLength={MAX_PASSWORD_LENGTH}
               value={form.current_password}
               onChange={(e) =>
                 setForm((f) => ({ ...f, current_password: e.target.value }))
@@ -93,8 +96,8 @@ export function ChangePasswordPage() {
             <input
               type="password"
               required
-              minLength={8}
-              maxLength={100}
+              minLength={MIN_PASSWORD_LENGTH}
+              maxLength={MAX_PASSWORD_LENGTH}
               value={form.new_password}
               onChange={(e) =>
                 setForm((f) => ({ ...f, new_password: e.target.value }))
@@ -102,7 +105,7 @@ export function ChangePasswordPage() {
               className="w-full rounded border border-slate-300 bg-white px-3 py-2 text-slate-900"
             />
             <p className="mt-1 text-xs text-slate-500">
-              Must be at least 8 characters long
+              Must be at least {MIN_PASSWORD_LENGTH} characters long
             </p>
           </div>
 
@@ -113,8 +116,8 @@ export function ChangePasswordPage() {
             <input
               type="password"
               required
-              minLength={8}
-              maxLength={100}
+              minLength={MIN_PASSWORD_LENGTH}
+              maxLength={MAX_PASSWORD_LENGTH}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               className="w-full rounded border border-slate-300 bg-white px-3 py-2 text-slate-900"
