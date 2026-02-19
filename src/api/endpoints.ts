@@ -7,6 +7,7 @@ export const endpoints = {
     login: '/api/v1/auth/login',
     createUser: '/api/v1/auth',
     unlockAccount: '/api/v1/auth/unlock-account',
+    changePassword: '/api/v1/auth/change-password',
   },
   profile: {
     me: '/api/v1/profile/current',
