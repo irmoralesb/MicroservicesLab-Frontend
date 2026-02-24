@@ -7,5 +7,7 @@
 			"path": "../MicroservicesLab-IdentityService"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"powershell.cwd": "MicroservicesLab-IdentityService"
+	}
 }
