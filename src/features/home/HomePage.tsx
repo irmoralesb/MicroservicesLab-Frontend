@@ -6,8 +6,8 @@ export function HomePage() {
   const navigate = useNavigate()
 
   const handleLogout = () => {
-    // TODO (you implement): Clear token and redirect to login.
-    // logout(); navigate('/login', { replace: true });
+    logout(); 
+    navigate('/login', { replace: true });
   }
 
   return (

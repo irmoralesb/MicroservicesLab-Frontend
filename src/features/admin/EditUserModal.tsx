@@ -34,7 +34,6 @@ export function EditUserModal({
   });
   const [roles, setRoles] = useState<RoleOption[]>([]);
   const [selectedRoleIds, setSelectedRoleIds] = useState<string[]>([]);
-  const [initialRoleIds, setInitialRoleIds] = useState<string[]>([]);
   const [rolesLoading, setRolesLoading] = useState(false);
   const [roleUpdatingIds, setRoleUpdatingIds] = useState<Set<string>>(
     () => new Set(),
@@ -81,7 +80,6 @@ export function EditUserModal({
     if (!open) {
       setRoles([]);
       setSelectedRoleIds([]);
-      setInitialRoleIds([]);
       setRolesLoading(false);
       setRoleUpdatingIds(new Set());
       setError(null);
@@ -157,14 +155,12 @@ export function EditUserModal({
               .filter((roleId): roleId is string => Boolean(roleId))
           : [];
         setSelectedRoleIds(assignedIds);
-        setInitialRoleIds(assignedIds);
       } catch (err) {
         const message =
           err instanceof Error ? err.message : "Failed to load roles";
         setError(message);
         setRoles([]);
         setSelectedRoleIds([]);
-        setInitialRoleIds([]);
       } finally {
         setRolesLoading(false);
       }
@@ -203,9 +199,6 @@ export function EditUserModal({
       if (!res.ok) {
         throw new Error(data.detail ?? "Failed to update roles");
       }
-      setInitialRoleIds((prev) =>
-        checked ? [...new Set([...prev, roleId])] : prev.filter((id) => id !== roleId),
-      );
     } catch (err) {
       setSelectedRoleIds((prev) =>
         checked ? prev.filter((id) => id !== roleId) : [...new Set([...prev, roleId])],
