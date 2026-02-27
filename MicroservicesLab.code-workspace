@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "../MicroservicesLab-IdentityService"
+		},
+		{
+			"path": "../MicroservicesLab-Infrastructure"
 		}
 	],
 	"settings": {
